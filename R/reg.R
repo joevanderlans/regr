@@ -1,6 +1,6 @@
 #' Replicate STATA Regressions
 #'
-#' `reg` replicates STATA regressions including regressions with robust standard
+#' \code{reg} replicates STATA regressions including regressions with robust standard
 #' errors and clustered standard errors.
 #'
 #' @param formula A formula providing the specifications for your model.
@@ -29,7 +29,7 @@ reg <- function(formula, data, robust = FALSE, cluster = NULL) {
 
   } else if (robust == TRUE & length(cluster) >= 1) {
     # Stop if the user uses robust and cluster
-    stop("This function does facilitate robust and clustered standard errors.")
+    stop("Please choose either robust standard errors or clustered standard errors.")
 
   } else if (robust == FALSE & is.null(cluster)) {
     # If neither robust nor cluster use ordinary OLS
@@ -46,7 +46,7 @@ reg <- function(formula, data, robust = FALSE, cluster = NULL) {
     K <- model[["rank"]]
     dfc <- (M / (M - 1)) * ((N - 1) / (N - K))
     u <- apply(sandwich::estfun(model), 2,
-               function(x) tapply(x, data[cluster], sum))
+               function(x) tapply(x, factor(data[[cluster]]), sum))
     reg_vcov <- dfc * sandwich::sandwich(model, meat = crossprod(u) / N)
 
   } else if (robust == FALSE & length(cluster) == 2) {
@@ -60,9 +60,9 @@ reg <- function(formula, data, robust = FALSE, cluster = NULL) {
     dfc2 <- (M2 / (M2 - 1)) * ((N - 1) / (N - K))
     dfc12 <- (M12 / (M12 - 1)) * ((N - 1) / (N - K))
     u1 <- apply(sandwich::estfun(model), 2,
-                function(x) tapply(x, data[cluster[1]], sum))
+                function(x) tapply(x, factor(data[[cluster[1]]]), sum))
     u2 <- apply(sandwich::estfun(model), 2,
-                function(x) tapply(x, data[cluster[2]], sum))
+                function(x) tapply(x, factor(data[[cluster[2]]]), sum))
     cluster1 <- as.numeric(as.factor(data[[cluster[1]]]))
     cluster2 <- as.numeric(as.factor(data[[cluster[2]]]))
     cluster12 <- paste(cluster1, cluster2, sep = "_")

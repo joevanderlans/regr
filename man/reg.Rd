@@ -23,7 +23,7 @@ A data frame with one row for each independent variable and columns
   t-statistics, and p-values.
 }
 \description{
-`reg` replicates STATA regressions including regressions with robust standard
+\code{reg} replicates STATA regressions including regressions with robust standard
 errors and clustered standard errors.
 }
 \examples{

@@ -1,7 +1,7 @@
 Package: regr
 Type: Package
 Title: Replicate STATA Regressions
-Version: 0.0.0.9000
+Version: 0.0.1
 Author: person("Joe", "Vanderlans", "joevanderlans@gmail.com", c("aut", "cre"))
 Description: A tool to easily replicate STATA regressions including regressions
     with robust and clustered standard errors.
@@ -12,5 +12,8 @@ Imports:
     sandwich (>= 2.3),
     lmtest (>= 0.9)
 Suggests:
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr

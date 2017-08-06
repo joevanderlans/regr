@@ -1,7 +1,7 @@
 library(regr)
 data("panel_data")
 
-context("Test that reg produces the correct results.")
+context("Test that reg produces the correct results")
 
 test_that("reg matches results", {
   expect_equal(round(reg(y ~ x, panel_data)[[1, 2]], 4), 0.0297)

@@ -22,6 +22,7 @@
 reg <- function(formula, data, robust = FALSE, cluster = NULL) {
   # Create the foundational linear model
   model <- lm(formula, data)
+  model_obs <- complete.cases(data[all.vars(formula)])
 
   if (length(cluster) >= 3) {
     # Stop if the user inputs more than two variables by which to cluster
@@ -45,8 +46,8 @@ reg <- function(formula, data, robust = FALSE, cluster = NULL) {
     N <- nrow(data)
     K <- model[["rank"]]
     dfc <- (M / (M - 1)) * ((N - 1) / (N - K))
-    u <- apply(sandwich::estfun(model), 2,
-               function(x) tapply(x, factor(data[[cluster]]), sum))
+    cluster_1 <- as.factor(data[[cluster]][model_obs])
+    u <- apply(sandwich::estfun(model), 2, function(x) tapply(x, cluster_1, sum))
     reg_vcov <- dfc * sandwich::sandwich(model, meat = crossprod(u) / N)
 
   } else if (robust == FALSE & length(cluster) == 2) {
@@ -59,15 +60,12 @@ reg <- function(formula, data, robust = FALSE, cluster = NULL) {
     dfc1 <- (M1 / (M1 - 1)) * ((N - 1) / (N - K))
     dfc2 <- (M2 / (M2 - 1)) * ((N - 1) / (N - K))
     dfc12 <- (M12 / (M12 - 1)) * ((N - 1) / (N - K))
-    u1 <- apply(sandwich::estfun(model), 2,
-                function(x) tapply(x, factor(data[[cluster[1]]]), sum))
-    u2 <- apply(sandwich::estfun(model), 2,
-                function(x) tapply(x, factor(data[[cluster[2]]]), sum))
-    cluster1 <- as.numeric(as.factor(data[[cluster[1]]]))
-    cluster2 <- as.numeric(as.factor(data[[cluster[2]]]))
-    cluster12 <- paste(cluster1, cluster2, sep = "_")
-    u12 <- apply(sandwich::estfun(model), 2,
-                 function(x) tapply(x, cluster12, sum))
+    cluster_1 <- as.factor(data[[cluster[1]]][model_obs])
+    cluster_2 <- as.factor(data[[cluster[2]]][model_obs])
+    cluster_12 <- paste(as.numeric(cluster_1), as.numeric(cluster_2), sep = "_")
+    u1 <- apply(sandwich::estfun(model), 2, function(x) tapply(x, cluster_1, sum))
+    u2 <- apply(sandwich::estfun(model), 2, function(x) tapply(x, cluster_2, sum))
+    u12 <- apply(sandwich::estfun(model), 2, function(x) tapply(x, cluster_12, sum))
     vc1 <- dfc1 * sandwich::sandwich(model, meat = crossprod(u1) / N)
     vc2 <- dfc2 * sandwich::sandwich(model, meat = crossprod(u2) / N)
     vc12 <- dfc12 * sandwich::sandwich(model, meat = crossprod(u12) / N)
@@ -76,7 +74,7 @@ reg <- function(formula, data, robust = FALSE, cluster = NULL) {
 
   # Create a data frame to export
   model_coeftest <- lmtest::coeftest(model, reg_vcov)
-  model_df <- data.frame(model_coeftest[, 1:4])
+  model_df <- data.frame(model_coeftest[, 1:4, drop = FALSE])
   model_df <- data.frame(variable = rownames(model_df), model_df)
   model_df[["variable"]] <- as.character(model_df[["variable"]])
   rownames(model_df) <- NULL

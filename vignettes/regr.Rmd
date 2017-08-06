@@ -1,13 +1,18 @@
 ---
 title: "Introduction to regr"
-output: html_vignette
+author: "Joe Vanderlans"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{regr}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 The goal of this package is to provide users the ability to easily replicate STATA regressions in R.  Particularly, this package provides the `reg` function, inspired by STATA's `reg` command.  This function allows users to quickly run regressions with robust or clustered standard errors and returns results which match those of STATA.  This document demonstrates how to use `regr`.
 
 ## Data
 
-This example uses test data from Petersen (2006).  Petersen uses this data to perform the following analyses:
+This example uses test data from Petersen (2006).  Petersen performs the following analyses on this data:
 
 1. Standard OLS (`reg y x`)
 1. Robust standard errors:  (`reg y x, robust`)

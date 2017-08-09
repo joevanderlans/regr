@@ -24,7 +24,7 @@ Petersen provides the results to these analyses using STATA [here](http://www.ke
 
 ## Example Regressions
 
-First, load the data.
+First, we load the data.
 ```{r}
 library(regr)
 data("panel_data")
@@ -39,20 +39,20 @@ reg(y ~ x, panel_data)
 
 ### 2. Robust standard errors
 ```{r}
-reg(y ~ x, robust = TRUE, panel_data)
+reg(y ~ x, panel_data, robust = TRUE)
 ```
 
 ### 3. Cluster standard errors by firm
 ```{r}
-reg(y ~ x, cluster = "firmid", panel_data)
+reg(y ~ x, panel_data, cluster = "firmid")
 ```
 
 ### 4. Cluster standard errors by year
 ```{r}
-reg(y ~ x, cluster = "year", panel_data)
+reg(y ~ x, panel_data, cluster = "year")
 ```
 
 ### 5. Cluster standard errors by both firm and year
 ```{r}
-reg(y ~ x, cluster = c("firmid", "year"), panel_data)
+reg(y ~ x, panel_data, cluster = c("firmid", "year"))
 ```

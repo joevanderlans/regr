@@ -1,0 +1,51 @@
+# regr
+Replicate STATA Regressions in R
+
+The goal of this package is to provide users the ability to easily replicate STATA regressions in R.  Particularly, this package provides the `reg` function, inspired by STATA's `reg` command.  This function allows users to quickly run regressions with robust or clustered standard errors and returns results which match those of STATA.  This document demonstrates how to use `regr`.
+
+## Data
+
+This example uses test data from Petersen (2006).  Petersen performs the following analyses on this data:
+
+1. Standard OLS (`reg y x`)
+1. Robust standard errors:  (`reg y x, robust`)
+1. Cluster standard errors by firm (`reg y x, cluster(firmid)`)
+1. Cluster standard errors by year (`reg y x, cluster(year)`)
+1. Cluster standard errors by firm and year (`reg y x, cluster(firmid, year)`)
+
+Petersen provides the results to these analyses using STATA [here](http://www.kellogg.northwestern.edu/faculty/petersen/htm/papers/se/test_data.htm).  We will replicate these analyses in turn to demonstrate the use of `regr`.
+
+## Example Regressions
+
+First, we load the data.
+```{r}
+library(regr)
+data("panel_data")
+```
+
+Now, we can run the regressions.
+
+### 1. Basic OLS
+```{r}
+reg(y ~ x, panel_data)
+```
+
+### 2. Robust standard errors
+```{r}
+reg(y ~ x, panel_data, robust = TRUE)
+```
+
+### 3. Cluster standard errors by firm
+```{r}
+reg(y ~ x, panel_data, cluster = "firmid")
+```
+
+### 4. Cluster standard errors by year
+```{r}
+reg(y ~ x, panel_data, cluster = "year")
+```
+
+### 5. Cluster standard errors by both firm and year
+```{r}
+reg(y ~ x, panel_data, cluster = c("firmid", "year"))
+```

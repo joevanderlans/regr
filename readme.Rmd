@@ -1,5 +1,7 @@
-# regr
-Replicate STATA Regressions in R
+---
+title: "Introduction to regr"
+output: rmarkdown::github_document
+---
 
 The goal of this package is to provide users the ability to easily replicate STATA regressions in R.  Particularly, this package provides the `reg` function, inspired by STATA's `reg` command.  This function allows users to quickly run regressions with robust or clustered standard errors and returns results which match those of STATA.  This document demonstrates how to use `regr`.
 
